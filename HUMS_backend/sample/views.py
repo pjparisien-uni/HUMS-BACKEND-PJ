@@ -3,7 +3,7 @@ Views for the sample APIs
 """
 from rest_framework import generics
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
-from .models import Sample
+from core.models import Sample
 from .serializers import SampleSerializer
 
 class SampleList(generics.ListCreateAPIView):
