@@ -17,15 +17,21 @@ from pathlib import Path
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
+# See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-y_b+1!dek6onhpgo(0a9oa03p1uclq@=p$p_10rdx%$1&4g^^+'
+SECRET_KEY = os.environ.get('SECRET_KEY', 'changeme')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = bool(int(os.environ.get('DEBUG', 0)))
 
 ALLOWED_HOSTS = []
+ALLOWED_HOSTS.extend(
+    filter(
+        None,
+        os.environ.get('ALLOWED_HOSTS', '').split(','),
+    )
+)
 
 # Application definition
 
@@ -35,7 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-    'django.contrib.staticfiles',
+    'django.contrib.staticfiles', 
 
     # Third Party apps
     'rest_framework',
@@ -83,14 +89,25 @@ WSGI_APPLICATION = 'HUMS_backend.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
+#DATABASES = {
+#    'default': {
+#        'ENGINE': 'django.db.backends.postgresql',
+#        'NAME': 'hums_database',
+#        'USER': 'postgres',
+#        'PASSWORD': 'pp0502',
+#        'HOST': 'localhost',
+#        'PORT': '5432',
+#    }
+#}
+
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'hums_database',
-        'USER': 'postgres',
-        'PASSWORD': 'pp0502',
-        'HOST': 'localhost',
-        'PORT': '5432',
+        'HOST': os.environ.get('DB_HOST'),
+        'NAME': os.environ.get('DB_NAME'),
+        'USER': os.environ.get('DB_USER'),
+        'PASSWORD': os.environ.get('DB_PASS'),
     }
 }
 
@@ -145,26 +162,26 @@ REST_FRAMEWORK = {
 
 AUTH_USER_MODEL = 'core.User'
 
-SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
-    'REFRESH_TOKEN_LIFETIME': timedelta(days=14),
-    'ROTATE_REFRESH_TOKENS': True,
-    'BLACKLIST_AFTER_ROTATION': True,
-
-    'ALGORITHM': 'HS256',
-    'SIGNING_KEY': SECRET_KEY,
-    'VERIFYING_KEY': None,
-    'AUDIENCE': None,
-    'ISSUER': None,
-
-    'AUTH_HEADER_TYPES': ('Bearer',),
-    'AUTH_HEADER_NAME': 'HTTP_AUTHORIZATION',
-    'USER_ID_FIELD': 'id',
-    'USER_ID_CLAIM': 'user_id',
-
-    'AUTH_TOKEN_CLASSES': ('rest_framework_simplejwt.tokens.AccessToken',),
-    'TOKEN_TYPE_CLAIM': 'token_type',
-
-    'JTI_LEEWAY': 0,
-    'ID_TOKEN_CLAIM': 'jti',
-}
+#SIMPLE_JWT = {
+#    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
+#    'REFRESH_TOKEN_LIFETIME': timedelta(days=14),
+#    'ROTATE_REFRESH_TOKENS': True,
+#    'BLACKLIST_AFTER_ROTATION': True,
+#
+#    'ALGORITHM': 'HS256',
+#    'SIGNING_KEY': SECRET_KEY,
+#    'VERIFYING_KEY': None,
+#    'AUDIENCE': None,
+#    'ISSUER': None,
+#
+#    'AUTH_HEADER_TYPES': ('Bearer',),
+#    'AUTH_HEADER_NAME': 'HTTP_AUTHORIZATION',
+#    'USER_ID_FIELD': 'id',
+#    'USER_ID_CLAIM': 'user_id',
+#
+#    'AUTH_TOKEN_CLASSES': ('rest_framework_simplejwt.tokens.AccessToken',),
+#    'TOKEN_TYPE_CLAIM': 'token_type',
+#
+#    'JTI_LEEWAY': 0,
+#    'ID_TOKEN_CLAIM': 'jti',
+#}
